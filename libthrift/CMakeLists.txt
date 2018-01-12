@@ -2,20 +2,39 @@ cmake_minimum_required(VERSION 3.1)
 
 project(libthrift)
 
+if (MSVC)
+    set(_mdtype "md")
+    set(_no_compiler -DBUILD_COMPILER=ON)
+endif()
+
+if (${CMAKE_BUILD_TYPE} STREQUAL Debug)
+    set(_postfix "d")
+endif()
+
 include(ExternalProject)
+
 ExternalProject_Add(thrift_project
     GIT_REPOSITORY https://git-wip-us.apache.org/repos/asf/thrift.git
     UPDATE_DISCONNECTED 1
     GIT_SHALLOW 1
     CMAKE_ARGS
+    ${_no_compiler}
     -DCMAKE_BUILD_TYPE=$<CONFIG>
-    -DBUILD_COMPILER=OFF
     -DBUILD_TESTING=OFF
     -DBUILD_TUTORIALS=OFF
     -DBUILD_EXAMPLES=OFF
     -DBUILD_PYTHON=OFF
     -DWITH_SHARED_LIB=OFF
     -DWITH_STATIC_LIB=ON
+    -DWITH_C_GLIB=OFF
+    -DWITH_JAVA=OFF
+    -DWITH_PYTHON=OFF
+    -DWITH_QT4=OFF
+    -DWITH_QT5=OFF
+    -DWITH_ZLIB=OFF
+    -DWITH_STDTHREADS=ON
+    -DWITH_LIBEVENT=OFF
+    -DWITH_OPENSSL=OFF
     -DCMAKE_INSTALL_PREFIX=${CMAKE_CURRENT_BINARY_DIR}
     PREFIX "${CMAKE_CURRENT_BINARY_DIR}"
     )
@@ -24,6 +43,8 @@ file(MAKE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/include)
 add_library(${PROJECT_NAME} STATIC IMPORTED GLOBAL)
 add_dependencies(${PROJECT_NAME} thrift_project)
 set_target_properties(${PROJECT_NAME} PROPERTIES
-    IMPORTED_LOCATION ${CMAKE_CURRENT_BINARY_DIR}/lib/thriftmdd.lib
-    INTERFACE_INCLUDE_DIRECTORIES ${CMAKE_CURRENT_BINARY_DIR}/include
+    INTERFACE_INCLUDE_DIRECTORIES
+    ${CMAKE_CURRENT_BINARY_DIR}/include
+    IMPORTED_LOCATION
+    ${CMAKE_CURRENT_BINARY_DIR}/lib/${CMAKE_STATIC_LIBRARY_PREFIX}thrift${_mdtype}${_postfix}${CMAKE_STATIC_LIBRARY_SUFFIX}
     )
