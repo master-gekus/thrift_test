@@ -4,7 +4,7 @@ project(libthrift)
 
 if (MSVC)
     set(_mdtype "md")
-    set(_no_compiler -DBUILD_COMPILER=ON)
+    set(_no_compiler -DBUILD_COMPILER=OFF)
 endif()
 
 if (${CMAKE_BUILD_TYPE} STREQUAL Debug)
