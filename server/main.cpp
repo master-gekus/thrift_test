@@ -25,7 +25,6 @@ public:
     void replacePair(const int64_t key, const std::string& value) override {
         printf("replacePair(%" PRIu64 ", \"%s\");\n", key, value.c_str());
         map_[key] = value;
-        printf("replacePair\n");
     }
 
     void getStruct(SharedStruct& _return, const int64_t key) override {
