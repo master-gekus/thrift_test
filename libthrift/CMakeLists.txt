@@ -37,14 +37,21 @@ ExternalProject_Add(thrift_project
     -DWITH_OPENSSL=OFF
     -DCMAKE_INSTALL_PREFIX=${CMAKE_CURRENT_BINARY_DIR}
     PREFIX "${CMAKE_CURRENT_BINARY_DIR}"
+    INSTALL_COMMAND ""
     )
 
-file(MAKE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/include)
+ExternalProject_Get_Property(thrift_project SOURCE_DIR)
+set(THRIFT_INCLUDE_DIRS ${SOURCE_DIR}/lib/cpp/src)
+
+ExternalProject_Get_Property(thrift_project BINARY_DIR)
+set(THRIFT_LIBS_DIR ${BINARY_DIR}/lib)
+
+file(MAKE_DIRECTORY ${THRIFT_INCLUDE_DIRS})
 add_library(${PROJECT_NAME} STATIC IMPORTED GLOBAL)
 add_dependencies(${PROJECT_NAME} thrift_project)
 set_target_properties(${PROJECT_NAME} PROPERTIES
     INTERFACE_INCLUDE_DIRECTORIES
-    ${CMAKE_CURRENT_BINARY_DIR}/include
+    ${THRIFT_INCLUDE_DIRS}
     IMPORTED_LOCATION
-    ${CMAKE_CURRENT_BINARY_DIR}/lib/${CMAKE_STATIC_LIBRARY_PREFIX}thrift${_mdtype}${_postfix}${CMAKE_STATIC_LIBRARY_SUFFIX}
+    ${THRIFT_LIBS_DIR}/${CMAKE_STATIC_LIBRARY_PREFIX}thrift${_mdtype}${_postfix}${CMAKE_STATIC_LIBRARY_SUFFIX}
     )
