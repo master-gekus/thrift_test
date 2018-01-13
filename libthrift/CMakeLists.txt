@@ -7,19 +7,19 @@ if (MSVC)
     set(_no_compiler -DBUILD_COMPILER=OFF)
 endif()
 
-if (${CMAKE_BUILD_TYPE} STREQUAL Debug)
+if (CMAKE_BUILD_TYPE STREQUAL Debug)
     set(_postfix "d")
 endif()
 
 if(NOT WIN32)
-    find_package(flex 2.5 REQUIRED)
+    include(FindFLEX)
     if(FLEX_VERSION VERSION_LESS 2.5)
         message(FATAL_ERROR "FLEX version invalid. "
             "Building of thrift-compiler requires FLEX version 2.5 or greater"
             "(found version: ${FLEX_VERSION}).")
     endif()
 
-    find_package(bison 3.0.0 REQUIRED)
+    include(FindBISON)
     if(BISON_VERSION VERSION_LESS 3.0)
         message(FATAL_ERROR "BISON version invalid. "
             "Building of thrift-compiler requires BISON version 3.0 or greater "
