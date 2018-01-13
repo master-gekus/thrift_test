@@ -11,6 +11,22 @@ if (${CMAKE_BUILD_TYPE} STREQUAL Debug)
     set(_postfix "d")
 endif()
 
+if(NOT WIN32)
+    find_package(flex 2.5 REQUIRED)
+    if(FLEX_VERSION VERSION_LESS 2.5)
+        message(FATAL_ERROR "FLEX version invalid. "
+            "Building of thrift-compiler requires FLEX version 2.5 or greater"
+            "(found version: ${FLEX_VERSION}).")
+    endif()
+
+    find_package(bison 3.0.0 REQUIRED)
+    if(BISON_VERSION VERSION_LESS 3.0)
+        message(FATAL_ERROR "BISON version invalid. "
+            "Building of thrift-compiler requires BISON version 3.0 or greater "
+            "(found version: ${BISON_VERSION}).")
+    endif()
+endif(NOT WIN32)
+
 include(ExternalProject)
 
 ExternalProject_Add(thrift_project
